@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlowLuxe – Therapeutic Dance Flows</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="shell header">
+    <div class="brand">
+      <img src="logo.png" alt="FlowLuxe logo" class="logo" onerror="this.style.display='none'">
+      <div>
+        <h1>FlowLuxe</h1>
+        <p>Therapeutic dance flows to help you unwind.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell main">
+    <!-- Selection form -->
+    <section class="card">
+      <h2>Build My Flow</h2>
+      <p class="hint">Choose the type of dance and vibe you want tonight.</p>
+
+      <form id="flowForm" class="grid">
+        <!-- Style -->
+        <div class="field">
+          <label for="style">Dance style</label>
+          <select id="style" required>
+            <option value="">Select style</option>
+            <option value="belly">Belly dance flow</option>
+            <option value="pole">Pole artistry flow</option>
+            <option value="twerk">Twerk-inspired flow</option>
+          </select>
+        </div>
+
+        <!-- Mood -->
+        <div class="field">
+          <label for="mood">Mood</label>
+          <select id="mood" required>
+            <option value="">How do you want to feel?</option>
+            <option value="calm">Calm & grounded</option>
+            <option value="confident">Confident & powerful</option>
+            <option value="playful">Playful & energized</option>
+          </select>
+        </div>
+
+        <!-- Intensity -->
+        <div class="field">
+          <label for="intensity">Intensity</label>
+          <select id="intensity" required>
+            <option value="">Pick intensity</option>
+            <option value="low">Low / soothing</option>
+            <option value="medium">Medium / balanced</option>
+            <option value="high">High / cardio</option>
+          </select>
+        </div>
+
+        <!-- Session length -->
+        <div class="field">
+          <label for="length">Session length</label>
+          <select id="length" required>
+            <option value="">How long?</option>
+            <option value="short">5–8 minutes</option>
+            <option value="medium">10–15 minutes</option>
+            <option value="long">18–25 minutes</option>
+          </select>
+        </div>
+
+        <!-- Body-positive preference -->
+        <div class="field">
+          <label for="bodyType">Dancer style (body-positive)</label>
+          <select id="bodyType">
+            <option value="">No preference</option>
+            <option value="light">Light & flowy</option>
+            <option value="strong">Strong & athletic</option>
+            <option value="curvy">Curvy & full-figure</option>
+          </select>
+        </div>
+
+        <!-- Skill rating -->
+        <div class="field">
+          <label for="skill">Skill level of dancer</label>
+          <select id="skill" required>
+            <option value="">Skill feel</option>
+            <option value="gentle">Gentle / beginner-friendly</option>
+            <option value="intermediate">Intermediate artistry</option>
+            <option value="elite">Elite performance</option>
+          </select>
+        </div>
+
+        <button type="submit" class="primary">Generate My Flow</button>
+      </form>
+    </section>
+
+    <!-- Result card -->
+    <section class="card" id="resultCard" hidden>
+      <h2>Your FlowLuxe Session</h2>
+      <p id="sessionTitle" class="session-title"></p>
+      <p id="sessionDetails"></p>
+      <p id="sessionNote" class="note"></p>
+      <button id="newFlow" class="ghost">Create another flow</button>
+    </section>
+
+    <!-- Subscription info (mock) -->
+    <section class="card">
+      <h2>FlowLuxe Subscription</h2>
+      <p class="hint">
+        In a full version of this app, subscribers would unlock a fresh library of high-quality,
+        non-explicit dance sessions every month.
+      </p>
+      <div class="pricing">
+        <div>
+          <h3>Monthly</h3>
+          <p class="price">$9.99</p>
+          <p>Unlimited flows • New sessions added regularly • Safe & body-positive</p>
+          <button id="subscribeBtn" class="primary outline">
+            Subscribe (demo)
+          </button>
+        </div>
+      </div>
+      <p id="subscribeMsg" class="tiny"></p>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <small>Class demo only · FlowLuxe does not host real content in this version.</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
