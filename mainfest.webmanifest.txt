@@ -1,0 +1,11 @@
+{
+  "name": "FlowLuxe",
+  "short_name": "FlowLuxe",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050716",
+  "theme_color": "#0b1020",
+  "icons": [
+    { "src": "logo.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}
