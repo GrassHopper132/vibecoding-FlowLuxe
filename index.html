@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FlowLuxe – Therapeutic Dance Flows</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#0b1020">
-
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1020" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="theme-calm">
-  <!-- Cinematic particles -->
+  <!-- Background particles -->
   <canvas id="fxCanvas" aria-hidden="true"></canvas>
 
   <header class="shell header">
@@ -24,14 +22,8 @@
       </div>
     </div>
     <div class="toggles">
-      <label class="toggle">
-        <input id="audioToggle" type="checkbox">
-        <span>Ambient audio</span>
-      </label>
-      <label class="toggle">
-        <input id="motionToggle" type="checkbox">
-        <span>Reduce motion</span>
-      </label>
+      <label class="toggle"><input id="audioToggle" type="checkbox"><span>Ambient audio</span></label>
+      <label class="toggle"><input id="motionToggle" type="checkbox"><span>Reduce motion</span></label>
       <button id="installBtn" class="ghost small" hidden>Install app</button>
       <button id="favoritesBtn" class="ghost small">Favorites (0)</button>
     </div>
@@ -48,13 +40,19 @@
       </div>
     </section>
 
-    <!-- Selection form -->
+    <!-- Build form -->
     <section class="card">
       <h2>Build My Flow</h2>
       <p class="hint">Choose the type of dance and vibe you want tonight.</p>
 
-      <form id="flowForm" class="grid">
-        <!-- Style -->
+      <form id="flowForm" class="grid" autocomplete="off">
+        <p id="formError" class="error-text" hidden></p>
+        
+        <button type="submit" class="primary">Generate My Flow</button>
+      </form>
+    </section>
+
+      <form id="flowForm" class="grid" autocomplete="off">
         <div class="field">
           <label for="style">Dance style</label>
           <select id="style" required>
@@ -65,7 +63,6 @@
           </select>
         </div>
 
-        <!-- Mood -->
         <div class="field">
           <label for="mood">Mood</label>
           <select id="mood" required>
@@ -76,7 +73,6 @@
           </select>
         </div>
 
-        <!-- Intensity -->
         <div class="field">
           <label for="intensity">Intensity</label>
           <select id="intensity" required>
@@ -87,7 +83,6 @@
           </select>
         </div>
 
-        <!-- Session length -->
         <div class="field">
           <label for="length">Session length</label>
           <select id="length" required>
@@ -98,7 +93,6 @@
           </select>
         </div>
 
-        <!-- Body-positive preference -->
         <div class="field">
           <label for="bodyType">Dancer style (body-positive)</label>
           <select id="bodyType">
@@ -109,7 +103,6 @@
           </select>
         </div>
 
-        <!-- Skill rating -->
         <div class="field">
           <label for="skill">Skill level of dancer</label>
           <select id="skill" required>
@@ -124,7 +117,7 @@
       </form>
     </section>
 
-    <!-- Result card -->
+    <!-- Result -->
     <section class="card" id="resultCard" hidden>
       <h2>Your FlowLuxe Session</h2>
       <p id="sessionTitle" class="session-title"></p>
@@ -140,18 +133,14 @@
     <section class="card">
       <h2>Unwind Mix</h2>
       <p class="hint">Auto-build a 10–15 minute playlist based on your current mood.</p>
-      <div class="row">
-        <button id="buildMix" class="primary">Build My Mix</button>
-      </div>
+      <div class="row"><button id="buildMix" class="primary">Build My Mix</button></div>
       <ul id="mixList" class="list"></ul>
     </section>
 
-    <!-- Subscription info (mock) -->
+    <!-- Subscription info -->
     <section class="card">
       <h2>FlowLuxe Subscription</h2>
-      <p class="hint">
-        In a full version, subscribers unlock a curated library of non-explicit dance flows. This demo keeps content private (no sharing).
-      </p>
+      <p class="hint">Subscribers unlock a curated, private library. Demo keeps content private (no sharing).</p>
       <div class="pricing">
         <div>
           <h3>Monthly</h3>
@@ -165,7 +154,7 @@
   </main>
 
   <footer class="shell footer">
-    <small>No personal data collected; favorites are stored locally on your device.</small>
+    <small>No personal data collected; favorites are saved only on your device.</small>
   </footer>
 
   <!-- Favorites drawer -->
@@ -179,7 +168,7 @@
     </div>
   </aside>
 
-  <!-- Breathing overlay -->
+  <!-- Breathing overlay (starts hidden, cannot block page on load) -->
   <div id="breathOverlay" class="overlay" hidden>
     <div class="breath-card">
       <div class="ring" id="breathRing"></div>
@@ -189,7 +178,6 @@
   </div>
 
   <audio id="ambience" loop></audio>
-
   <script src="script.js"></script>
 </body>
 </html>
