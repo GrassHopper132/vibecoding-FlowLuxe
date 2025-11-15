@@ -1,3 +1,33 @@
+// ...
+const skillEl = document.getElementById("skill");
+const stylePreview = document.getElementById("stylePreview"); // <-- ADD THIS
+// ...
+/* ---------- Style Previews ---------- */
+
+// 1. Create a "map" of your video files
+//    IMPORTANT: Change "belly.mp4" etc. to match
+//    your exact video filenames.
+const videoMap = {
+  "belly": "belly.mp4",
+  "pole": "pole.mp4",
+  "twerk": "twerk.mp4"
+};
+
+// 2. Listen for changes on the "Dance style" dropdown
+styleEl.addEventListener("change", () => {
+  const selectedStyle = styleEl.value;
+
+  if (videoMap[selectedStyle]) {
+    // If we have a video for this style:
+    stylePreview.src = videoMap[selectedStyle];
+    stylePreview.hidden = false;
+    stylePreview.play();
+  } else {
+    // If the user selects "Select style" (which is blank):
+    stylePreview.hidden = true;
+    stylePreview.pause();
+  }
+});
 // ====== State & helpers ======
 const DB = {
   favs: "flowluxe:favorites",
@@ -330,3 +360,4 @@ const fx = (()=> {
   return { init, stop:false };
 })();
 fx.init();
+
