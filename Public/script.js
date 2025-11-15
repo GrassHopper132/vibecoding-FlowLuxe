@@ -27,7 +27,6 @@ const intensityEl = document.getElementById("intensity");
 const lengthEl = document.getElementById("length");
 const bodyTypeEl = document.getElementById("bodyType");
 const skillEl = document.getElementById("skill");
-// DELETED: const stylePreview = document.getElementById("stylePreview");
 
 const resultCard = document.getElementById("resultCard");
 const sessionTitle = document.getElementById("sessionTitle");
@@ -69,10 +68,6 @@ const signupBtn = document.getElementById("signupBtn");
 const authError = document.getElementById("authError");
 const emailEl = document.getElementById("email");
 const passwordEl = document.getElementById("password");
-
-
-/* ---------- Style Previews (DELETED) ---------- */
-// The styleEl.addEventListener logic is now GONE.
 
 
 /* ---------- NEW AUTH LOGIC ---------- */
@@ -122,7 +117,6 @@ auth.onAuthStateChanged((user) => {
 /* ---------- texts ---------- */
 const styleText = { belly:"Belly dance flow", pole:"Pole artistry flow", twerk:"Twerk-inspired flow" };
 
-// MOVED: The videoMap is now here
 const videoMap = {
   "belly": "belly.mp4",
   "pole": "pole.mp4",
@@ -184,7 +178,7 @@ let lastSession=null;
 function generateSession(meta){
   analytics.logEvent('generate_flow', { style: meta.s, mood: meta.m, intensity: meta.i });
 
-  // NEW: This function now controls the video
+  // This function now controls the video
   if (videoMap[meta.s]) {
     sessionVideo.src = videoMap[meta.s];
     sessionVideo.hidden = false;
@@ -205,7 +199,11 @@ function generateSession(meta){
 
   lastSession = { id:Date.now(), title, details:parts.join(" "), note:pick(notes), meta };
   sessionTitle.textContent = lastSession.title;
-  sessionDetails.textContent = lastSession.details;
+  
+  // === THIS IS THE FIX ===
+  sessionDetails.textContent = lastSession.details; // Was 'lastSun.details'
+  // === END OF FIX ===
+  
   sessionNote.textContent = lastSession.note;
 
   resultCard.hidden = false;
@@ -229,7 +227,7 @@ form.addEventListener("submit",(e)=>{
   generateSession({s,m,i,len,body,skill});
 });
 
-/* Preset tiles (UPDATED) */
+/* Preset tiles */
 document.querySelectorAll(".preset").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     styleEl.value = btn.dataset.style;
@@ -238,7 +236,6 @@ document.querySelectorAll(".preset").forEach(btn=>{
     lengthEl.value = btn.dataset.length;
     skillEl.value = "intermediate";
     bodyTypeEl.value = "";
-    // DELETED: The 'dispatchEvent' line is gone.
     generateSession({s:styleEl.value,m:moodEl.value,i:intensityEl.value,len:lengthEl.value,body:"",skill:"intermediate"});
   });
 });
@@ -378,7 +375,7 @@ function runBreathing(){
   cycle();
 }
 
-startBreath.addEventListener("click", ()=>{ showOverlay(); runBreathing(); });
+startBreath.addEventListener("click", ()=>{ showOverlay(); runGasping(); });
 skipBreath.addEventListener("click", hideOverlay);
 
 /* ---------- subscription stub ---------- */
