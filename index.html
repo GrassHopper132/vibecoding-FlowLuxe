@@ -27,6 +27,46 @@
       <button id="installBtn" class="ghost small" hidden>Install app</button>
       <button id="favoritesBtn" class="ghost small">Favorites (0)</button>
     </div>
+    <div class="field">
+          <label for="style">Dance style</label>
+          <select id="style" required>
+            <option value="">Select style</option>
+            <option value="belly">Belly dance flow</option>
+            <option value="pole">Pole artistry flow</option>
+            <option value="twerk">Twerk-inspired flow</option>
+          </select>
+        </div>
+
+        <video id="stylePreview" width="100%" muted loop playsinline hidden></video>
+
+        <div class="field">
+          <label for="mood">Mood</label>
+          ```
+
+* **`id="stylePreview"`:** This lets our JavaScript find it.
+* **`muted loop playsinline`:** This makes it act like a silent, looping GIF.
+* **`hidden`:** This makes it invisible until the user selects a style.
+
+---
+
+### Step 2: Style the Player in `style.css`
+
+That video tag will look a bit plain, and it might mess up your form's grid. Let's fix it.
+
+1.  Open your **`public/style.css`** file.
+2.  Add this CSS block at the very bottom:
+
+```css
+/* This styles your new video preview */
+#stylePreview {
+  border-radius: 10px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+
+  /* This is important: it makes the video span
+     the full width of the form grid */
+  grid-column: 1 / -1;
+}
   </header>
 
   <main class="shell main">
@@ -181,3 +221,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
