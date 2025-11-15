@@ -12,15 +12,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // --- Get references to the services we need ---
-const db = firebase.firestore(); // This is your new database
-const auth = firebase.auth();   // This is your new user/login system
-const analytics = firebase.analytics(); // This is your new Analytics tool
-const perf = firebase.performance(); // This is your new Performance tool
+const db = firebase.firestore();
+const auth = firebase.auth();
+const analytics = firebase.analytics();
+const perf = firebase.performance();
 // --- END OF NEW FIREBASE CODE ---
-
-
-/* ---------- storage helpers (OLD WAY - NOW DELETED) ---------- */
-// We are now using Firestore, so these are no longer needed.
 
 
 /* ---------- DOM refs ---------- */
@@ -31,10 +27,11 @@ const intensityEl = document.getElementById("intensity");
 const lengthEl = document.getElementById("length");
 const bodyTypeEl = document.getElementById("bodyType");
 const skillEl = document.getElementById("skill");
-const stylePreview = document.getElementById("stylePreview"); // Video player
+// DELETED: const stylePreview = document.getElementById("stylePreview");
 
 const resultCard = document.getElementById("resultCard");
 const sessionTitle = document.getElementById("sessionTitle");
+const sessionVideo = document.getElementById("sessionVideo"); // NEW
 const sessionDetails = document.getElementById("sessionDetails");
 const sessionNote = document.getElementById("sessionNote");
 const formError = document.getElementById("formError");
@@ -63,7 +60,7 @@ const startBreath = document.getElementById("startBreath");
 
 const fxCanvas = document.getElementById("fxCanvas");
 
-// NEW: Auth/Login DOM Refs
+// Auth/Login DOM Refs
 const loginSection = document.getElementById("loginSection");
 const mainContent = document.getElementById("mainContent");
 const loginForm = document.getElementById("loginForm");
@@ -73,29 +70,12 @@ const authError = document.getElementById("authError");
 const emailEl = document.getElementById("email");
 const passwordEl = document.getElementById("password");
 
-/* ---------- Style Previews ---------- */
-// Map your video filenames here
-const videoMap = {
-  "belly": "belly.mp4",
-  "pole": "pole.mp4",
-  "twerk": "twerk.mp4"
-};
 
-// Listen for changes on the "Dance style" dropdown
-styleEl.addEventListener("change", () => {
-  const selectedStyle = styleEl.value;
-  if (videoMap[selectedStyle]) {
-    stylePreview.src = videoMap[selectedStyle];
-    stylePreview.hidden = false;
-    stylePreview.play();
-  } else {
-    stylePreview.hidden = true;
-    stylePreview.pause();
-  }
-});
+/* ---------- Style Previews (DELETED) ---------- */
+// The styleEl.addEventListener logic is now GONE.
+
 
 /* ---------- NEW AUTH LOGIC ---------- */
-// Sign Up
 signupBtn.addEventListener("click", () => {
   const email = emailEl.value;
   const password = passwordEl.value;
@@ -110,10 +90,8 @@ signupBtn.addEventListener("click", () => {
       authError.hidden = false;
     });
 });
-
-// Login
 loginBtn.addEventListener("click", (e) => {
-  e.preventDefault(); // Stop form from submitting
+  e.preventDefault();
   const email = emailEl.value;
   const password = passwordEl.value;
 
@@ -127,19 +105,15 @@ loginBtn.addEventListener("click", (e) => {
       authError.hidden = false;
     });
 });
-
-// Listen for Auth State Changes (This shows/hides the app)
 auth.onAuthStateChanged((user) => {
   if (user) {
-    // User is logged in
-    loginSection.hidden = true; // Hide the login form
-    mainContent.hidden = false; // Show the app
-    updateFavCount(); // Load their favorites
+    loginSection.hidden = true;
+    mainContent.hidden = false;
+    updateFavCount();
     renderFavs();
   } else {
-    // User is logged out
-    loginSection.hidden = false; // Show the login form
-    mainContent.hidden = true;  // Hide the app
+    loginSection.hidden = false;
+    mainContent.hidden = true;
   }
 });
 /* ---------- END OF NEW AUTH LOGIC ---------- */
@@ -147,6 +121,14 @@ auth.onAuthStateChanged((user) => {
 
 /* ---------- texts ---------- */
 const styleText = { belly:"Belly dance flow", pole:"Pole artistry flow", twerk:"Twerk-inspired flow" };
+
+// MOVED: The videoMap is now here
+const videoMap = {
+  "belly": "belly.mp4",
+  "pole": "pole.mp4",
+  "twerk": "twerk.mp4"
+};
+
 const moodLines = {
   calm: [
     "slow, hypnotic sequences with soft camera motion",
@@ -197,11 +179,20 @@ audioToggle.addEventListener("change", ()=> {
 });
 moodEl.addEventListener("change", ()=> setThemeFromMood(moodEl.value||"calm"));
 
-/* ---------- generate session ---------- */
+/* ---------- generate session (UPDATED) ---------- */
 let lastSession=null;
 function generateSession(meta){
-  // NEW: Log custom event to Analytics
   analytics.logEvent('generate_flow', { style: meta.s, mood: meta.m, intensity: meta.i });
+
+  // NEW: This function now controls the video
+  if (videoMap[meta.s]) {
+    sessionVideo.src = videoMap[meta.s];
+    sessionVideo.hidden = false;
+    sessionVideo.play();
+  } else {
+    sessionVideo.hidden = true;
+    sessionVideo.pause();
+  }
 
   const title = `${styleText[meta.s]} · ${meta.m[0].toUpperCase()+meta.m.slice(1)} mood`;
   const moodLine = pick(moodLines[meta.m]);
@@ -238,7 +229,7 @@ form.addEventListener("submit",(e)=>{
   generateSession({s,m,i,len,body,skill});
 });
 
-/* Preset tiles */
+/* Preset tiles (UPDATED) */
 document.querySelectorAll(".preset").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     styleEl.value = btn.dataset.style;
@@ -247,37 +238,31 @@ document.querySelectorAll(".preset").forEach(btn=>{
     lengthEl.value = btn.dataset.length;
     skillEl.value = "intermediate";
     bodyTypeEl.value = "";
-    // Trigger the change event to show the video
-    styleEl.dispatchEvent(new Event('change'));
+    // DELETED: The 'dispatchEvent' line is gone.
     generateSession({s:styleEl.value,m:moodEl.value,i:intensityEl.value,len:lengthEl.value,body:"",skill:"intermediate"});
   });
 });
 
 
 /* ---------- favorites (NEW FIREBASE-POWERED) ---------- */
-
-// NEW: Get the user's favorites collection
 function getFavsCollection() {
   const user = auth.currentUser;
   if (!user) return null;
-  // This creates a path like: users / {userID} / favorites
   return db.collection("users").doc(user.uid).collection("favorites");
 }
 
-// NEW: Renders favorites from Firestore
 async function renderFavs(){
   const favsCollection = getFavsCollection();
   if (!favsCollection) return;
 
-  favList.innerHTML = ""; // Clear list
+  favList.innerHTML = "";
   
   try {
-    // Get all documents from the user's "favorites" collection
     const snapshot = await favsCollection.orderBy("id", "desc").limit(20).get();
     
     snapshot.forEach(doc => {
-      const f = doc.data(); // Get the favorite data
-      const docId = doc.id;  // Get the unique document ID
+      const f = doc.data();
+      const docId = doc.id;
 
       const li = document.createElement("li");
       li.innerHTML = `<strong>${f.title}</strong><div class="tiny">${f.details}</div>
@@ -285,14 +270,13 @@ async function renderFavs(){
       favList.appendChild(li);
     });
 
-    // Add delete listeners AFTER rendering
     favList.querySelectorAll(".del").forEach(b => {
       b.addEventListener("click", async () => {
         const docId = b.dataset.id;
         if (confirm("Are you sure you want to delete this favorite?")) {
           await getFavsCollection().doc(docId).delete();
-          renderFavs(); // Re-render the list
-          updateFavCount(); // Update the count
+          renderFavs();
+          updateFavCount();
         }
       });
     });
@@ -302,7 +286,6 @@ async function renderFavs(){
   }
 }
 
-// NEW: Updates count from Firestore
 async function updateFavCount(){
   const favsCollection = getFavsCollection();
   if (!favsCollection) {
@@ -315,7 +298,6 @@ async function updateFavCount(){
   favoritesBtn.textContent = `Favorites (${count})`;
 }
 
-// NEW: Saves a favorite to Firestore
 saveFavBtn.addEventListener("click", async () => {
   if(!lastSession) return;
   
@@ -326,18 +308,16 @@ saveFavBtn.addEventListener("click", async () => {
   }
 
   try {
-    // 'add' will auto-generate a unique ID
     await favsCollection.add(lastSession); 
-    
     updateFavCount();
     favDrawer.setAttribute("aria-hidden","false");
-    renderFavs(); // Re-render list
-  } catch (error) {
+    renderFavs();
+  } catch (error)
+    {
     console.error("Error saving favorite: ", error);
   }
 });
 
-// These two listeners are fine as-is
 favoritesBtn.addEventListener("click", ()=>{ favDrawer.setAttribute("aria-hidden","false"); renderFavs(); });
 closeFav.addEventListener("click", ()=> favDrawer.setAttribute("aria-hidden","true"));
 /* ---------- END OF FIREBASE FAVORITES ---------- */
@@ -440,6 +420,5 @@ if('serviceWorker' in navigator){ window.addEventListener('load', ()=> navigator
 
 /* ---------- safety on load ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
-  // Ensure overlay is hidden on first paint
   overlay.hidden = true;
 });

@@ -67,13 +67,14 @@ button{
 .preset{border:1px solid #374151;background:transparent;color:var(--text);padding:10px 12px;border-radius:12px}
 .preset:hover{border-color:var(--a2)}
 
-/* NEW: Video Preview Player Style */
-#stylePreview {
+/* DELETED: The #stylePreview rule is gone.
+  NEW: Rule for the video player in the result card
+*/
+#sessionVideo {
   border-radius: 10px;
-  margin-top: 8px;
+  margin-top: 4px;
+  margin-bottom: 12px;
   border: 1px solid var(--border);
-  /* This makes the video span the full width of the form grid */
-  grid-column: 1 / -1;
 }
 
 #resultCard{margin-top:4px}
@@ -87,7 +88,6 @@ button{
   color: #ff6b6b;
   font-size: 0.9em;
   text-align: center;
-  /* This makes it span all grid columns in your form */
   grid-column: 1 / -1; 
 }
 
@@ -104,8 +104,7 @@ button{
   background:rgba(0,0,0,.65);
   align-items:center;
   justify-content:center;
-  z-index: 100; /* Ensures it's on top */
-  /* 'display: flex' was removed to allow 'hidden' to work */
+  z-index: 100;
 }
 .breath-card{background:#0b1020;border:1px solid #1f2436;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .ring{width:140px;height:140px;border-radius:999px;border:3px solid var(--a2);box-shadow:0 0 40px rgba(0,0,0,.35);animation:breath 12s infinite ease-in-out}

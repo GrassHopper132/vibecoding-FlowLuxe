@@ -73,8 +73,6 @@
           </select>
         </div>
 
-        <video id="stylePreview" width="100%" muted loop playsinline hidden></video>
-
         <div class="field">
           <label for="mood">Mood</label>
           <select id="mood" required>
@@ -133,6 +131,9 @@
     <section class="card" id="resultCard" hidden>
       <h2>Your FlowLuxe Session</h2>
       <p id="sessionTitle" class="session-title"></p>
+
+      <video id="sessionVideo" width="100%" muted loop playsinline hidden></video>
+      
       <p id="sessionDetails"></p>
       <p id="sessionNote" class="note"></p>
       <div class="row">
