@@ -30,7 +30,7 @@ const skillEl = document.getElementById("skill");
 
 const resultCard = document.getElementById("resultCard");
 const sessionTitle = document.getElementById("sessionTitle");
-const sessionVideo = document.getElementById("sessionVideo"); // NEW
+const sessionVideo = document.getElementById("sessionVideo");
 const sessionDetails = document.getElementById("sessionDetails");
 const sessionNote = document.getElementById("sessionNote");
 const formError = document.getElementById("formError");
@@ -117,11 +117,14 @@ auth.onAuthStateChanged((user) => {
 /* ---------- texts ---------- */
 const styleText = { belly:"Belly dance flow", pole:"Pole artistry flow", twerk:"Twerk-inspired flow" };
 
+// === THIS IS THE FIX for your video names ===
+// (Assuming they are .mp4 files. If not, change .mp4 to .mov or .webm)
 const videoMap = {
-  "belly": "belly.mp4",
-  "pole": "pole.mp4",
+  "belly": "belly dance.mp4",
+  "pole": "pole dance.mp4",
   "twerk": "twerk.mp4"
 };
+// === END OF FIX ===
 
 const moodLines = {
   calm: [
@@ -163,9 +166,9 @@ function setThemeFromMood(mood){
   if(audioToggle.checked) setAmbienceForMood(mood);
 }
 const moodTracks = {
-  calm: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_aa7b4d66b5.mp3?filename=ambient-piano-10667.mp3",
-  confident: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a7e6fdf0b.mp3?filename=ambient-111527.mp3",
-  playful: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_2e9a7b6b76.mp3?filename=future-bass-110089.mp3"
+  calm: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_aa7b4d66b5.mp3?filename=ambient-piano-10667.mp4",
+  confident: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a7e6fdf0b.mp3?filename=ambient-111527.mp4",
+  playful: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_2e9a7b6b76.mp3?filename=future-bass-110089.mp4"
 };
 function setAmbienceForMood(m){ ambience.src=moodTracks[m]||""; ambience.volume=0.25; ambience.play().catch(()=>{}); }
 audioToggle.addEventListener("change", ()=> {
@@ -200,7 +203,7 @@ function generateSession(meta){
   lastSession = { id:Date.now(), title, details:parts.join(" "), note:pick(notes), meta };
   sessionTitle.textContent = lastSession.title;
   
-  // === THIS IS THE FIX ===
+  // === THIS IS THE FIX for the broken button ===
   sessionDetails.textContent = lastSession.details; // Was 'lastSun.details'
   // === END OF FIX ===
   
@@ -375,7 +378,7 @@ function runBreathing(){
   cycle();
 }
 
-startBreath.addEventListener("click", ()=>{ showOverlay(); runGasping(); });
+startBreath.addEventListener("click", ()=>{ showOverlay(); runBreathing(); });
 skipBreath.addEventListener("click", hideOverlay);
 
 /* ---------- subscription stub ---------- */
