@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlowLuxe – Therapeutic Dance Flows</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-calm">
+  <canvas id="fxCanvas" aria-hidden="true"></canvas>
+
+  <header class="shell header">
+    <div class="brand">
+      <img src="logo.png" alt="FlowLuxe logo" class="logo" onerror="this.style.display='none'">
+      <div>
+        <h1>FlowLuxe</h1>
+        <p>Therapeutic dance flows to help you unwind.</p>
+      </div>
+    </div>
+    <div class="toggles">
+      <label class="toggle"><input id="audioToggle" type="checkbox"><span>Ambient audio</span></label>
+      <label class="toggle"><input id="motionToggle" type="checkbox"><span>Reduce motion</span></label>
+      <button id="installBtn" class="ghost small" hidden>Install app</button>
+      <button id="favoritesBtn" class="ghost small">Favorites (0)</button>
+    </div>
+  </header>
+
+  <section id="loginSection" class="shell" style="padding-top: 0;">
+    <div class="card">
+      <h2>Welcome</h2>
+      <p class="hint">Please sign in or create an account to save your flows.</p>
+      <form id="loginForm" class="grid" autocomplete="off">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" id="loginBtn" class="primary">Login</button>
+        <button type="button" id="signupBtn" class="primary outline">Sign Up</button>
+      </form>
+      <p id="authError" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <main class="shell main" id="mainContent" hidden>
+    <section class="card">
+      <h2>Flow Styles</h2>
+      <div class="presets">
+        <button class="preset" data-style="belly" data-mood="calm" data-intensity="low" data-length="medium">Belly Calm</button>
+        <button class="preset" data-style="pole" data-mood="confident" data-intensity="medium" data-length="medium">Pole Confident</button>
+        <button class="preset" data-style="twerk" data-mood="playful" data-intensity="high" data-length="short">Twerk Playful</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Build My Flow</h2>
+      <p class="hint">Choose the type of dance and vibe you want tonight.</p>
+
+      <form id="flowForm" class="grid" autocomplete="off">
+        <div class="field">
+          <label for="style">Dance style</label>
+          <select id="style" required>
+            <option value="">Select style</option>
+            <option value="belly">Belly dance flow</option>
+            <option value="pole">Pole artistry flow</option>
+            <option value="twerk">Twerk-inspired flow</option>
+          </select>
+        </div>
+
+        <video id="stylePreview" width="100%" muted loop playsinline hidden></video>
+
+        <div class="field">
+          <label for="mood">Mood</label>
+          <select id="mood" required>
+            <option value="">How do you want to feel?</option>
+            <option value="calm">Calm & grounded</option>
+            <option value="confident">Confident & powerful</option>
+            <option value="playful">Playful & energized</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="intensity">Intensity</label>
+          <select id="intensity" required>
+            <option value="">Pick intensity</option>
+            <option value="low">Low / soothing</option>
+            <option value="medium">Medium / balanced</option>
+            <option value="high">High / cardio</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="length">Session length</label>
+          <select id="length" required>
+            <option value="">How long?</option>
+            <option value="short">5–8 minutes</option>
+            <option value="medium">10–15 minutes</option>
+            <option value="long">18–25 minutes</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="bodyType">Dancer style (body-positive)</label>
+          <select id="bodyType">
+            <option value="">No preference</option>
+            <option value="light">Light & flowy</option>
+            <option value="strong">Strong & athletic</option>
+            <option value="curvy">Curvy & full-figure</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="skill">Skill level of dancer</label>
+          <select id="skill" required>
+            <option value="">Skill feel</option>
+            <option value="gentle">Gentle / beginner-friendly</option>
+            <option value="intermediate">Intermediate artistry</option>
+            <option value="elite">Elite performance</option>
+          </select>
+        </div>
+
+        <p id="formError" class="error-text" hidden></p>
+        <button type="submit" class="primary">Generate My Flow</button>
+      </form>
+    </section>
+
+    <section class="card" id="resultCard" hidden>
+      <h2>Your FlowLuxe Session</h2>
+      <p id="sessionTitle" class="session-title"></p>
+      <p id="sessionDetails"></p>
+      <p id="sessionNote" class="note"></p>
+      <div class="row">
+        <button id="saveFav" class="primary outline">❤️ Save</button>
+        <button id="startBreath" class="ghost">Start Breathing Finish</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Unwind Mix</h2>
+      <p class="hint">Auto-build a 10–15 minute playlist based on your current mood.</p>
+      <div class="row"><button id="buildMix" class="primary">Build My Mix</button></div>
+      <ul id="mixList" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <h2>FlowLuxe Subscription</h2>
+      <p class="hint">Subscribers unlock a curated, private library. Demo keeps content private (no sharing).</p>
+      <div class="pricing">
+        <div>
+          <h3>Monthly</h3>
+          <p class="price">$9.99</p>
+          <p>Unlimited flows • New sessions regularly • Safe & body-positive</p>
+          <button id="subscribeBtn" class="primary outline">Subscribe (demo)</button>
+        </div>
+      </div>
+      <p id="subscribeMsg" class="tiny"></p>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <small>No personal data collected; favorites are saved only on your device.</small>
+  </footer>
+
+  <aside id="favDrawer" class="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <h3>Favorites</h3>
+        <button id="closeFav" class="ghost small">Close</button>
+      </div>
+      <ul id="favList" class="list"></ul>
+    </div>
+  </aside>
+
+  <div id="breathOverlay" class="overlay" hidden>
+    <div class="breath-card">
+      <div class="ring" id="breathRing"></div>
+      <p id="breathText">Ready?</p>
+      <button id="skipBreath" class="ghost small">Skip</button>
+    </div>
+  </div>
+
+  <audio id="ambience" loop></audio>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-performance-compat.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
