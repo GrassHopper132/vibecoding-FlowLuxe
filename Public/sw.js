@@ -1,5 +1,5 @@
-const CACHE = "flowluxe-v2"; // was v1
-
+const CACHE = "flowluxe-v1";
+// We only cache the "app shell", not the videos. This is correct.
 const ASSETS = [
   "./",
   "./index.html",

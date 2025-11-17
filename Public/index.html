@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="theme-calm">
+  <!-- Background particles -->
   <canvas id="fxCanvas" aria-hidden="true"></canvas>
 
   <header class="shell header">
@@ -28,6 +29,7 @@
     </div>
   </header>
 
+  <!-- Login Section -->
   <section id="loginSection" class="shell" style="padding-top: 0;">
     <div class="card">
       <h2>Welcome</h2>
@@ -48,16 +50,20 @@
     </div>
   </section>
 
+  <!-- Main App Content -->
   <main class="shell main" id="mainContent" hidden>
+    <!-- Preset tiles -->
     <section class="card">
       <h2>Flow Styles</h2>
       <div class="presets">
         <button class="preset" data-style="belly" data-mood="calm" data-intensity="low" data-length="medium">Belly Calm</button>
         <button class="preset" data-style="pole" data-mood="confident" data-intensity="medium" data-length="medium">Pole Confident</button>
         <button class="preset" data-style="twerk" data-mood="playful" data-intensity="high" data-length="short">Twerk Playful</button>
+        <button class="preset" data-style="family" data-mood="playful" data-intensity="low" data-length="short">Family Fun</button>
       </div>
     </section>
 
+    <!-- Build form -->
     <section class="card">
       <h2>Build My Flow</h2>
       <p class="hint">Choose the type of dance and vibe you want tonight.</p>
@@ -70,6 +76,7 @@
             <option value="belly">Belly dance flow</option>
             <option value="pole">Pole artistry flow</option>
             <option value="twerk">Twerk-inspired flow</option>
+            <option value="family">Family dance flow</option>
           </select>
         </div>
 
@@ -128,11 +135,13 @@
       </form>
     </section>
 
+    <!-- Result -->
     <section class="card" id="resultCard" hidden>
       <h2>Your FlowLuxe Session</h2>
       <p id="sessionTitle" class="session-title"></p>
-
-      <video id="sessionVideo" width="100%" muted loop playsinline hidden></video>
+      
+      <!-- THIS IS THE LINE WITH THE VIDEO CONTROLS -->
+      <video id="sessionVideo" width="100%" muted loop playsinline controls hidden></video>
       
       <p id="sessionDetails"></p>
       <p id="sessionNote" class="note"></p>
@@ -142,6 +151,7 @@
       </div>
     </section>
 
+    <!-- Unwind Mix -->
     <section class="card">
       <h2>Unwind Mix</h2>
       <p class="hint">Auto-build a 10–15 minute playlist based on your current mood.</p>
@@ -149,6 +159,7 @@
       <ul id="mixList" class="list"></ul>
     </section>
 
+    <!-- Subscription info -->
     <section class="card">
       <h2>FlowLuxe Subscription</h2>
       <p class="hint">Subscribers unlock a curated, private library. Demo keeps content private (no sharing).</p>
@@ -168,6 +179,7 @@
     <small>No personal data collected; favorites are saved only on your device.</small>
   </footer>
 
+  <!-- Favorites drawer -->
   <aside id="favDrawer" class="drawer" aria-hidden="true">
     <div class="drawer-inner">
       <div class="drawer-head">
@@ -178,6 +190,7 @@
     </div>
   </aside>
 
+  <!-- Breathing overlay (starts hidden, cannot block page on load) -->
   <div id="breathOverlay" class="overlay" hidden>
     <div class="breath-card">
       <div class="ring" id="breathRing"></div>
@@ -188,12 +201,14 @@
 
   <audio id="ambience" loop></audio>
 
+  <!-- Firebase SDK Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-performance-compat.js"></script>
 
+  <!-- Your app's script, must be last -->
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 // --- NEW FIREBASE CONNECTION ---
 // PASTE YOUR FIREBASE CONFIG KEYS HERE
 const firebaseConfig = {
@@ -115,16 +116,22 @@ auth.onAuthStateChanged((user) => {
 
 
 /* ---------- texts ---------- */
-const styleText = { belly:"Belly dance flow", pole:"Pole artistry flow", twerk:"Twerk-inspired flow" };
+// NEW: Added "family"
+const styleText = { 
+  belly:"Belly dance flow", 
+  pole:"Pole artistry flow", 
+  twerk:"Twerk-inspired flow",
+  family: "Family dance flow" 
+};
 
-// === THIS IS THE FIX for your video names ===
-// (Assuming they are .mp4 files. If not, change .mp4 to .mov or .webm)
+// NEW: Added "family"
+// IMPORTANT: Make sure your video file is named "family dance.mp4"
 const videoMap = {
   "belly": "belly dance.mp4",
   "pole": "pole dance.mp4",
-  "twerk": "twerk.mp4"
+  "twerk": "twerk.mp4",
+  "family": "family dance.mp4"
 };
-// === END OF FIX ===
 
 const moodLines = {
   calm: [
@@ -158,6 +165,11 @@ const notes = [
   "If you’ve had a rough day, treat this as a reset button, not a workout scorecard."
 ];
 
+// This helper function was missing in some old versions
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 /* ---------- theme + ambience ---------- */
 function setThemeFromMood(mood){
   const cls = mood==="confident" ? "theme-confident" : mood==="playful" ? "theme-playful" : "theme-calm";
@@ -166,9 +178,9 @@ function setThemeFromMood(mood){
   if(audioToggle.checked) setAmbienceForMood(mood);
 }
 const moodTracks = {
-  calm: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_aa7b4d66b5.mp3?filename=ambient-piano-10667.mp4",
-  confident: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a7e6fdf0b.mp3?filename=ambient-111527.mp4",
-  playful: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_2e9a7b6b76.mp3?filename=future-bass-110089.mp4"
+  calm: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_aa7b4d66b5.mp3?filename=ambient-piano-10667.mp3",
+  confident: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a7e6fdf0b.mp3?filename=ambient-111527.mp3",
+  playful: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_2e9a7b6b76.mp3?filename=future-bass-110089.mp3"
 };
 function setAmbienceForMood(m){ ambience.src=moodTracks[m]||""; ambience.volume=0.25; ambience.play().catch(()=>{}); }
 audioToggle.addEventListener("change", ()=> {
@@ -176,12 +188,11 @@ audioToggle.addEventListener("change", ()=> {
 });
 moodEl.addEventListener("change", ()=> setThemeFromMood(moodEl.value||"calm"));
 
-/* ---------- generate session (UPDATED) ---------- */
+/* ---------- generate session ---------- */
 let lastSession=null;
 function generateSession(meta){
   analytics.logEvent('generate_flow', { style: meta.s, mood: meta.m, intensity: meta.i });
 
-  // This function now controls the video
   if (videoMap[meta.s]) {
     sessionVideo.src = videoMap[meta.s];
     sessionVideo.hidden = false;
@@ -202,11 +213,7 @@ function generateSession(meta){
 
   lastSession = { id:Date.now(), title, details:parts.join(" "), note:pick(notes), meta };
   sessionTitle.textContent = lastSession.title;
-  
-  // === THIS IS THE FIX for the broken button ===
-  sessionDetails.textContent = lastSession.details; // Was 'lastSun.details'
-  // === END OF FIX ===
-  
+  sessionDetails.textContent = lastSession.details;
   sessionNote.textContent = lastSession.note;
 
   resultCard.hidden = false;
@@ -273,7 +280,8 @@ async function renderFavs(){
     favList.querySelectorAll(".del").forEach(b => {
       b.addEventListener("click", async () => {
         const docId = b.dataset.id;
-        if (confirm("Are you sure you want to delete this favorite?")) {
+        // Replaced confirm() with a simpler check for compatibility
+        if (window.confirm("Are you sure you want to delete this favorite?")) {
           await getFavsCollection().doc(docId).delete();
           renderFavs();
           updateFavCount();
@@ -303,7 +311,7 @@ saveFavBtn.addEventListener("click", async () => {
   
   const favsCollection = getFavsCollection();
   if (!favsCollection) {
-    alert("Please log in to save favorites.");
+    console.warn("Please log in to save favorites."); // Replaced alert()
     return;
   }
 
@@ -323,19 +331,25 @@ closeFav.addEventListener("click", ()=> favDrawer.setAttribute("aria-hidden","tr
 /* ---------- END OF FIREBASE FAVORITES ---------- */
 
 
-/* ---------- Unwind Mix ---------- */
+/* ---------- Unwind Mix (UPDATED) ---------- */
 buildMixBtn.addEventListener("click", ()=>{
   const m = moodEl.value || "calm";
   const i = intensityEl.value || "medium";
+  
+  const allStyles = ["belly", "pole", "twerk", "family"];
+  const selectedStyle = styleEl.value || allStyles[Math.floor(Math.random() * allStyles.length)];
+
   const seq = [
-    {s:"belly", len:"short"},
-    {s:"pole",  len:"medium"},
-    {s:"twerk", len: i==="high" ? "medium" : "short"}
+    {s: selectedStyle, len: "short"},
+    {s: allStyles[Math.floor(Math.random() * allStyles.length)], len: "medium"},
+    {s: allStyles[Math.floor(Math.random() * allStyles.length)], len: i === "high" ? "medium" : "short"}
   ];
+
   mixList.innerHTML = "";
   seq.forEach((step,k)=>{
+    const title = styleText[step.s] || `${step.s} flow`;
     const el = document.createElement("li");
-    el.innerHTML = `<strong>${styleText[step.s]} · ${m[0].toUpperCase()+m.slice(1)} mood</strong>
+    el.innerHTML = `<strong>${title} · ${m[0].toUpperCase()+m.slice(1)} mood</strong>
       <span class="tiny"> (${lengthMap[step.len]})</span>
       <div class="row" style="margin-top:6px"><button class="primary small play" data-k="${k}">Play this step</button></div>`;
     mixList.appendChild(el);
@@ -343,15 +357,15 @@ buildMixBtn.addEventListener("click", ()=>{
   mixList.querySelectorAll(".play").forEach(b=>{
     b.addEventListener("click", ()=>{
       const k = parseInt(b.dataset.k);
-      const meta = { s: ["belly","pole","twerk"][k], m, i, len: seq[k].len, body:"", skill:"intermediate" };
+      const meta = { s: seq[k].s, m, i, len: seq[k].len, body:"", skill:"intermediate" };
       generateSession(meta);
       window.scrollTo({top:0,behavior:"smooth"});
     });
   });
 });
 
-/* ---------- Breathing overlay (cannot auto-open) ---------- */
-let breathTimers = [];
+/* ---------- Breathing overlay (BUGS FIXED) ---------- */
+let breathTimers = []; 
 function clearBreathTimers(){ breathTimers.forEach(t=>clearTimeout(t)); breathTimers = []; }
 function showOverlay(){ overlay.hidden = false; }
 function hideOverlay(){ overlay.hidden = true; clearBreathTimers(); breathText.textContent = "Ready?"; }
@@ -361,7 +375,7 @@ function runBreathing(){
   const steps = [
     {t:"Inhale…", d:4000},
     {t:"Hold…",   d:4000},
-    {t:"Exhale…", d:4000}
+    {t:"Exhale…", d:4000} 
   ];
   let loops = 0, i = 0;
   const cycle = () => {
@@ -380,6 +394,8 @@ function runBreathing(){
 
 startBreath.addEventListener("click", ()=>{ showOverlay(); runBreathing(); });
 skipBreath.addEventListener("click", hideOverlay);
+/* ---------- END OF BUG FIXES ---------- */
+
 
 /* ---------- subscription stub ---------- */
 subscribeBtn.addEventListener("click", ()=> {
@@ -415,7 +431,26 @@ if('serviceWorker' in navigator){ window.addEventListener('load', ()=> navigator
   }
   function loop(){ requestAnimationFrame(draw); }
   window.addEventListener('resize', resize);
-  init();
+  
+  // Check if motion is not reduced, then initialize
+  if (!motionToggle.checked) {
+    init();
+  }
+  
+  // Add listener for the motion toggle
+  motionToggle.addEventListener('change', () => {
+    if (motionToggle.checked) {
+      stop = true; // Stop the animation
+      ctx.clearRect(0,0,w,h); // Clear the canvas
+    } else {
+      stop = false;
+      if (stars.length === 0) { // Only init if it hasn't been initialized
+        init();
+      } else {
+        loop(); // Just resume the loop
+      }
+    }
+  });
 })();
 
 /* ---------- safety on load ---------- */

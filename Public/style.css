@@ -22,14 +22,40 @@ body{
 
 /* layout */
 .shell{max-width:960px;margin:0 auto;padding:16px}
-.header{padding-top:20px;padding-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{height:40px;width:auto;border-radius:12px}
-.brand h1{font-size:26px}
-.brand p{font-size:14px;color:var(--muted)}
-.toggles{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.toggle{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+
+/* --- HEADER UPDATED --- */
+.header{
+  padding-top:20px;
+  padding-bottom:8px;
+  display:flex;
+  flex-direction: column; /* Stack vertically */
+  align-items: center;    /* Center horizontally */
+  gap: 16px;              /* Increased gap */
+}
+.brand{
+  display:flex;
+  flex-direction: column; /* Stack logo on top of text */
+  align-items: center;    /* Center logo and text */
+  gap: 8px;
+}
+.logo{
+  height: 80px;  /* <-- MADE LOGO BIGGER (was 40px) */
+  width: auto;
+  border-radius: 12px;
+}
+.brand h1{font-size:26px; text-align: center;} /* Centered text */
+.brand p{font-size:14px;color:var(--muted); text-align: center;} /* Centered text */
+
+.toggles{
+  display:flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the buttons */
+}
 .small{font-size:12px;padding:6px 10px;border-radius:999px}
+/* --- END OF HEADER UPDATES --- */
+
 
 .main{display:flex;flex-direction:column;gap:16px;margin:8px 0 24px}
 .card{
@@ -67,15 +93,16 @@ button{
 .preset{border:1px solid #374151;background:transparent;color:var(--text);padding:10px 12px;border-radius:12px}
 .preset:hover{border-color:var(--a2)}
 
-/* DELETED: The #stylePreview rule is gone.
-  NEW: Rule for the video player in the result card
-*/
+/* --- THIS IS THE UPDATED RULE --- */
 #sessionVideo {
   border-radius: 10px;
-  margin-top: 4px;
-  margin-bottom: 12px;
   border: 1px solid var(--border);
+  /* New rules to make it 50% width and centered */
+  width: 50%;
+  display: block;
+  margin: 4px auto 12px auto;
 }
+/* --- END OF UPDATE --- */
 
 #resultCard{margin-top:4px}
 .session-title{font-weight:600;margin-bottom:6px}
